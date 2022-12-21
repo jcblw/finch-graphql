@@ -1,5 +1,6 @@
 import { DocumentNode, GraphQLFormattedError } from 'graphql';
 import gql from 'graphql-tag';
+import { Awaited } from '@finch-graphql/types';
 import { QueryCache } from './cache';
 import {
   FinchDefaultPortName,
@@ -263,24 +264,41 @@ export class FinchClient {
       });
     }
 
-    const result = await this.queryApi<Query, Variables>(
-      documentNode,
-      variables,
-      {
+    let result: Awaited<
+      ReturnType<typeof FinchClient['prototype']['queryApi']>
+    >;
+    try {
+      result = await this.queryApi<Query, Variables>(documentNode, variables, {
         id: this.id,
         messageKey: this.messageKey,
         ...options,
-      },
-    );
-
-    if (this.cache) {
-      this.cache.setCache(documentNode, variables, {
-        data: result.data,
-        errors: result.errors,
-        loading: false,
-        cacheStatus: FinchCacheStatus.Fresh,
       });
+
+      if (this.cache) {
+        this.cache.setCache(documentNode, variables, {
+          data: result?.data ?? snapshot.data,
+          errors: result?.errors,
+          loading: false,
+          cacheStatus: FinchCacheStatus.Fresh,
+        });
+
+        return result;
+      }
+    } catch (e) {
+      result = {
+        data: snapshot?.data,
+        errors: [e],
+      };
+      if (this.cache) {
+        this.cache.setCache(documentNode, variables, {
+          data: snapshot.data,
+          errors: [e],
+          loading: false,
+          cacheStatus: FinchCacheStatus.Fresh,
+        });
+      }
     }
+
     return result;
   }
 

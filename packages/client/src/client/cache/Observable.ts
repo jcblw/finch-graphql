@@ -32,8 +32,8 @@ export class Observable<T = any> {
    * This method allows for the updating of the observable value
    * @param value The new value to update the observable to
    */
-  public update(value: T) {
+  public update = (value: T) => {
     this.value = value;
     this.emitter.emit('change');
-  }
+  };
 }
