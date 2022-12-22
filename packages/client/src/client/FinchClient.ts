@@ -11,7 +11,7 @@ import { isDocumentNode } from '../utils';
 import { messageCreator, queryApi } from './client';
 import { connectPort } from '@finch-graphql/browser-polyfill';
 import { v4 } from 'uuid';
-import { FinchCacheStatus } from './cache/types';
+import { FinchCacheStatus, FinchQueryObservable } from './cache/types';
 
 interface FinchClientOptions {
   cache?: QueryCache;
@@ -255,7 +255,9 @@ export class FinchClient {
     options: FinchQueryOptions = {},
   ) {
     const documentNode = isDocumentNode(query) ? query : gql(query);
-    let cache = this.cache?.getCache(documentNode, variables);
+    let cache = this.cache?.getCache(documentNode, variables) as
+      | FinchQueryObservable<Query>
+      | undefined;
     const snapshot = cache?.getSnapshot();
     if (!snapshot.data || !snapshot.errors) {
       cache.update({
@@ -264,9 +266,7 @@ export class FinchClient {
       });
     }
 
-    let result: Awaited<
-      ReturnType<typeof FinchClient['prototype']['queryApi']>
-    >;
+    let result: Awaited<Omit<typeof snapshot, 'cacheStatus' | 'loading'>>;
     try {
       result = await this.queryApi<Query, Variables>(documentNode, variables, {
         id: this.id,
