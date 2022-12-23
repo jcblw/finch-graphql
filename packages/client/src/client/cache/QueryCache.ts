@@ -5,7 +5,7 @@ import {
   FinchQueryObservable,
   FinchQueryResults,
   FinchCacheStatus,
-} from './types';
+} from '../types';
 
 type Cache = Map<string, FinchQueryObservable<unknown>>;
 interface QueryCacheOptions {

@@ -1,3 +1,4 @@
+import { FinchCacheStatus } from '@finch-graphql/client';
 import { DocumentNode } from 'graphql';
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { useDeepCompareMemoize } from 'use-deep-compare-effect';
@@ -75,6 +76,15 @@ export const useQuery = <Query, Variables>(
   }, []);
 
   /**
+   * invalidate is a small method that allows you to invalidate the cache
+   * for the query.
+   */
+  const invalidate = useCallback(() => {
+    const snapshot = cache.getSnapshot();
+    cache.update({ ...snapshot, cacheStatus: FinchCacheStatus.Stale });
+  }, [cache]);
+
+  /**
    * refetch is a small methods that allows you to refetch the query.
    */
   const refetch = useCallback(
@@ -139,7 +149,8 @@ export const useQuery = <Query, Variables>(
       refetch,
       startPolling,
       stopPolling,
+      invalidate,
     }),
-    [data, error, loading, refetch, startPolling, stopPolling],
+    [data, error, loading, refetch, startPolling, stopPolling, invalidate],
   );
 };
