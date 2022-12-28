@@ -91,7 +91,9 @@ export const useQuery = <Query, Variables>(
   }, [cache]);
 
   /**
-   * refetch is a small methods that allows you to refetch the query.
+   * refetch is a small methods that allows you to refetch the query. If there
+   * is no cache policy set on the hook, we default to fetch first on the refetch
+   * to allow for awaiting of the the refetch query.
    */
   const refetch = useCallback(
     (overrideVariables?: Variables) => {
@@ -100,7 +102,7 @@ export const useQuery = <Query, Variables>(
       }
       return client.query(query, overrideVariables ?? variables, {
         timeout: timeout,
-        cachePolicy: cachePolicy,
+        cachePolicy: cachePolicy ?? FinchCachePolicy.FetchFirst,
       });
     },
     [client, timeout],
