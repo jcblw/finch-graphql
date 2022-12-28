@@ -72,7 +72,7 @@ module.exports = {
           ],
         },
       ],
-      copyright: `© ${new Date().getFullYear()} Toucan, Inc. Built with Docusaurus.`,
+      copyright: `© ${new Date().getFullYear()} Jacob Lowe. Built with Docusaurus.`,
     },
   },
   presets: [

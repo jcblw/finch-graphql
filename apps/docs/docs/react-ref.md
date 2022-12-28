@@ -65,6 +65,24 @@ If you need to refetch the query, you can use the `refetch` function returned fr
 ...
 ```
 
+#### Invalidation of Cache
+
+If you want to invalidate and refresh the cache of data in a query, instead of refetching you can use invalidation, which happens in the background. This is useful if you want to invalidate cache data based on some external event. A example of this is if you want to invalidate the cache when the focus of the window is returned to the browser.
+
+```typescript
+...
+  const { invalidate } = useQuery(query [, options)];
+
+  useEffect(() => {
+    const onFocus = () => invalidate(); // Invalidate the cache when the window is focused
+    window.addEventListener('focus', onFocus);
+    return () => window.removeEventListener('focus', onFocus);
+  }, [invalidate]);
+...
+```
+
+This is just a basic example of how you can use the `invalidate` function. You can use it in any way you want to invalidate the cache. We are planning to add some more advanced features that build on top of this, like window focus invalidation.
+
 #### Polling Controls
 
 The useQuery hook has a few additional controls that allow you to control the polling behavior of the query.
