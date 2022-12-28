@@ -230,13 +230,15 @@ describe('useQuery', () => {
     // Validate initial data is present
     expect(wrapper.result.current.data).toEqual({ bar: 'baz' });
 
-    await act(async () => {
+    act(() => {
       // Change the response
       sendMessageMock.mockImplementationOnce((_, callback) =>
         callback({ data: { bar: 'qux' } }),
       );
-      await client.query(testDoc, { foo: 'bar' });
+      client.query(testDoc, { foo: 'bar' });
     });
+
+    await wrapper.waitForNextUpdate();
 
     // Validate new value is present
     expect(wrapper.result.current.data).toEqual({ bar: 'qux' });

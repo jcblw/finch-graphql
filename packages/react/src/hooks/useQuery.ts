@@ -1,4 +1,5 @@
 import { FinchCacheStatus } from '@finch-graphql/client';
+import { FinchCachePolicy } from '@finch-graphql/types';
 import { DocumentNode } from 'graphql';
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { useDeepCompareMemoize } from 'use-deep-compare-effect';
@@ -11,6 +12,7 @@ interface BackgroundQueryOptions<Variables> {
   pollInterval?: number;
   poll?: boolean;
   timeout?: number;
+  cachePolicy?: FinchCachePolicy;
 }
 
 /**
@@ -33,6 +35,7 @@ export const useQuery = <Query, Variables>(
     pollInterval: passedPollInterval = 0,
     poll,
     timeout,
+    cachePolicy,
   }: BackgroundQueryOptions<Variables> = {},
 ) => {
   const { client } = useFinchClient();
@@ -40,7 +43,10 @@ export const useQuery = <Query, Variables>(
   const cache = useMemo(() => {
     const queryCache = client.cache.getCache<Query>(query, variables);
     if (!skip) {
-      client.query(query, variables, { timeout: timeout });
+      client.query(query, variables, {
+        timeout: timeout,
+        cachePolicy: cachePolicy,
+      });
     }
     return queryCache;
   }, useDeepCompareMemoize([variables, query, skip, timeout]));
@@ -94,6 +100,7 @@ export const useQuery = <Query, Variables>(
       }
       return client.query(query, overrideVariables ?? variables, {
         timeout: timeout,
+        cachePolicy: cachePolicy,
       });
     },
     [client, timeout],

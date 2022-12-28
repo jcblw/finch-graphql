@@ -277,7 +277,7 @@ export class FinchClient {
       });
     }
 
-    const pendingFetch = new Promise(async () => {
+    const pendingFetch = new Promise(async resolve => {
       let result: Awaited<Omit<typeof snapshot, 'cacheStatus' | 'loading'>>;
       try {
         result = await this.queryApi<Query, Variables>(
@@ -299,7 +299,8 @@ export class FinchClient {
           });
           this.queryLifecycleManager(documentNode, variables);
 
-          return result;
+          resolve(result);
+          return;
         }
       } catch (e) {
         result = {
@@ -315,7 +316,7 @@ export class FinchClient {
           });
         }
       }
-      return result;
+      resolve(result);
     });
 
     if (respondWithCache && snapshot.data && !snapshot.errors) {
