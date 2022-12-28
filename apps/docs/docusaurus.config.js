@@ -1,12 +1,12 @@
 module.exports = {
   title: 'Finch GraphQL',
   tagline: 'Communication for modern extensions',
-  url: 'https://jointoucan.github.io/finch-graphql/',
+  url: 'https://finch.graphql.la/',
   baseUrl: '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.svg',
-  organizationName: 'jointoucan', // Usually your GitHub org/user name.
+  organizationName: 'jcblw', // Usually your GitHub org/user name.
   projectName: 'finch-graphql', // Usually your repo name.
   themeConfig: {
     navbar: {
@@ -23,7 +23,7 @@ module.exports = {
           position: 'left',
         },
         {
-          href: 'https://github.com/jointoucan/finch-graphql',
+          href: 'https://github.com/jcblw/finch-graphql',
           label: 'GitHub',
           position: 'right',
         },
@@ -83,7 +83,7 @@ module.exports = {
           sidebarPath: require.resolve('./sidebars.js'),
           // Please change this to your repo.
           editUrl:
-            'https://github.com/jointoucan/finch-graphql/edit/master/packages/finch-docs/',
+            'https://github.com/jcblw/finch-graphql/edit/master/packages/finch-docs/',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
