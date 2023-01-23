@@ -275,7 +275,7 @@ export class FinchClient {
       return snapshot;
     }
 
-    if (!snapshot.data && !snapshot.errors) {
+    if (!snapshot.data && !snapshot.errors && !snapshot.loading) {
       cache.update({
         ...snapshot,
         cacheStatus: FinchCacheStatus.Fresh,
