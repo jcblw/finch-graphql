@@ -29,6 +29,8 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Docusaurus Build
         run: yarn workspace finch-docs build
+      - name: CNAME
+        run: echo "finch.graphql.la" > ./apps/docs/build/CNAME
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
